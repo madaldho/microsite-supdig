@@ -4,7 +4,8 @@ const nextConfig = {
     domains: [
       'hebbkx1anhila5yf.public.blob.vercel-storage.com',
       'images.pexels.com',
-      'themeforest.net'
+      'themeforest.net',
+      'images.ctfassets.net'
     ],
   },
 }
