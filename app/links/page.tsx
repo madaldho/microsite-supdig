@@ -1,5 +1,8 @@
+// app/links/page.tsx
 import { contentfulClient } from "@/lib/contentful";
-import LinkButton from "../components/LinkButtonn";
+import Image from "next/image";
+import Link from "next/link";
+import { ExternalLink } from "lucide-react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -9,7 +12,7 @@ export const metadata: Metadata = {
 
 export default async function LinksPage() {
   const entries = await contentfulClient.getEntries({
-    content_type: "link", // Sesuaikan dengan content type ID di Contentful
+    content_type: "link",
   });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -21,18 +24,49 @@ export default async function LinksPage() {
   }));
 
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-4xl font-bold mb-6 text-center">Daftar Link</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {links.map((link, index) => (
-          <LinkButton
-            key={index}
-            title={link.title}
-            subtitle={link.subtitle}
-            imageUrl={link.imageUrl}
-            redirectUrl={link.redirectUrl}
-          />
-        ))}
+    <div className="min-h-screen bg-gray-50 py-12 px-4">
+      <div className="max-w-2xl mx-auto">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-800 mb-4">
+            Daftar Link
+          </h1>
+          <div className="h-1 w-24 bg-blue-500 mx-auto rounded-full" />
+        </div>
+
+        <div className="space-y-4">
+          {links.map((link, index) => (
+            <Link
+              key={index}
+              href={link.redirectUrl}
+              className="block group"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <div className="bg-white rounded-xl shadow hover:shadow-lg transition-all duration-300 p-6 flex items-center gap-6">
+                <div className="flex-shrink-0 w-16 h-16 relative">
+                  <Image
+                    src={link.imageUrl}
+                    alt={link.title}
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-lg"
+                  />
+                </div>
+
+                <div className="flex-1">
+                  <h2 className="text-xl font-semibold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">
+                    {link.title}
+                  </h2>
+                  <p className="text-gray-600 line-clamp-2">
+                    {link.subtitle}
+                  </p>
+                </div>
+
+                <ExternalLink className="w-6 h-6 text-gray-400 group-hover:text-blue-600 transition-colors" />
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );
