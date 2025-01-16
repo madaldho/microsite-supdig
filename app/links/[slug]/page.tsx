@@ -1,10 +1,9 @@
 import { contentfulClient } from "@/lib/contentful";
-import { notFound } from 'next/navigation';
-import Image from 'next/image';
-import Link from 'next/link';
-import { ExternalLink } from 'lucide-react';
-import { Metadata } from 'next';
-import React from 'react';
+import { notFound } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
+import { ExternalLink } from "lucide-react";
+import { Metadata } from "next";
 
 // Define proper interfaces for type safety
 interface ContentfulImage {
@@ -23,23 +22,23 @@ interface LinkEntry {
   slug: string;
 }
 
+// Corrected PageProps definition
 type PageProps = {
-  params: {
-    slug: string;
-  };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
+// Main Page Component
 export default async function LinkPage({ params }: PageProps) {
-  const { slug } = params;
+  const { slug } = await params; // Await to resolve params promise
 
   const entries = await contentfulClient.getEntries({
-    content_type: 'link',
-    'fields.slug': slug,
+    content_type: "link",
+    "fields.slug": slug,
   });
 
   if (!entries.items.length) {
-    return notFound();
+    return notFound(); // Return 404 if no entries found
   }
 
   const item = entries.items[0].fields as unknown as LinkEntry;
@@ -101,18 +100,21 @@ export default async function LinkPage({ params }: PageProps) {
   );
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = params;
+// Generate Metadata
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { slug } = await params; // Await to resolve params promise
 
   const entries = await contentfulClient.getEntries({
-    content_type: 'link',
-    'fields.slug': slug,
+    content_type: "link",
+    "fields.slug": slug,
   });
 
   if (!entries.items.length) {
     return {
-      title: 'Not Found',
-      description: 'The page you\'re looking for does not exist.',
+      title: "Not Found",
+      description: "The page you're looking for does not exist.",
     };
   }
 
@@ -127,7 +129,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       images: [`https:${item.image.fields.file.url}`],
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title: item.title,
       description: item.description,
       images: [`https:${item.image.fields.file.url}`],
