@@ -10,11 +10,10 @@ interface PageProps {
   params: {
     slug: string;
   };
-  searchParams: { [key: string]: string | string[] | undefined };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default async function LinkPage({ params, searchParams }: PageProps) {
+export default async function LinkPage({ params }: PageProps) {
   const { slug } = params;
 
   const entries = await contentfulClient.getEntries({
