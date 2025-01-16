@@ -5,12 +5,12 @@ import Link from 'next/link';
 import { ExternalLink } from 'lucide-react';
 import { Metadata } from 'next';
 
-// Definisi type yang benar untuk Next.js 14
-interface PageProps {
+type PageProps = {
   params: {
     slug: string;
   };
-}
+  searchParams: { [key: string]: string | string[] | undefined };
+};
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default async function LinkPage({ params }: PageProps) {
