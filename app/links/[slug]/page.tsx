@@ -6,12 +6,17 @@ import Link from 'next/link';
 import { ExternalLink } from 'lucide-react';
 import { Metadata } from 'next';
 
-// Ini yang penting: kita definisikan tipe langsung di parameter fungsi
-export default async function LinkPage({ 
-  params: { slug } 
-}: { 
-  params: { slug: string } 
-}) {
+interface Params {
+  slug: string;
+}
+
+interface PageProps {
+  params: Params;
+}
+
+export default async function LinkPage({ params }: PageProps) {
+  const { slug } = params;
+
   if (!slug) return notFound();
 
   try {
@@ -24,47 +29,52 @@ export default async function LinkPage({
       return notFound();
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const item = entries.items[0].fields as any;
+    // Menghindari any, kita gunakan type Contentful Field
+    const item = entries.items[0].fields as {
+      title: string;
+      description: string;
+      redirectUrl: string;
+      image: {
+        fields: {
+          file: {
+            url: string;
+          };
+        };
+      };
+    };
 
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="container mx-auto px-4 py-8">
-          <div className="flex gap-8">
-            <div className="flex-1 flex items-center justify-center">
-              <Link
-                href={item.redirectUrl}
-                className="block group bg-white rounded-xl p-6 hover:bg-gray-50 transition-all duration-300 shadow-md hover:shadow-lg max-w-xl w-full"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <div className="flex items-center gap-6">
-                  <div className="flex-shrink-0 w-20 h-20 relative">
-                    <Image
-                      src={`https:${item.image.fields.file.url}`}
-                      alt={item.title}
-                      layout="fill"
-                      objectFit="cover"
-                      className="rounded-lg"
-                    />
+          <Link
+            href={item.redirectUrl}
+            className="block group bg-white rounded-xl p-6 hover:bg-gray-50 transition-all duration-300 shadow-md hover:shadow-lg max-w-xl w-full"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <div className="flex items-center gap-6">
+              <div className="flex-shrink-0 w-20 h-20 relative">
+                <Image
+                  src={`https:${item.image.fields.file.url}`}
+                  alt={item.title}
+                  width={80}
+                  height={80}
+                  className="rounded-lg"
+                />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                      {item.title}
+                    </h2>
+                    <p className="text-gray-600 line-clamp-2">{item.description}</p>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h2 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                          {item.title}
-                        </h2>
-                        <p className="text-gray-600 line-clamp-2">
-                          {item.description}
-                        </p>
-                      </div>
-                      <ExternalLink className="w-6 h-6 text-gray-400 group-hover:text-blue-600 transition-colors transform group-hover:translate-x-1 duration-300" />
-                    </div>
-                  </div>
+                  <ExternalLink className="w-6 h-6 text-gray-400 group-hover:text-blue-600 transition-colors transform group-hover:translate-x-1 duration-300" />
                 </div>
-              </Link>
+              </div>
             </div>
-          </div>
+          </Link>
         </div>
       </div>
     );
@@ -74,12 +84,10 @@ export default async function LinkPage({
   }
 }
 
-// Metadata juga pakai tipe inline
-export async function generateMetadata({ 
-  params: { slug } 
-}: { 
-  params: { slug: string } 
-}): Promise<Metadata> {
+// Metadata generator untuk halaman dinamis
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = params;
+
   if (!slug) {
     return {
       title: 'Not Found',
@@ -100,8 +108,11 @@ export async function generateMetadata({
       };
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const item = entries.items[0].fields as any;
+    // Menghindari any, kita gunakan type Contentful Field
+    const item = entries.items[0].fields as {
+      title: string;
+      description: string;
+    };
 
     return {
       title: item.title,
