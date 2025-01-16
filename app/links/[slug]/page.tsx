@@ -6,13 +6,13 @@ import Link from 'next/link';
 import { ExternalLink } from 'lucide-react';
 import { Metadata } from 'next';
 
-// Definisi params yang sesuai dengan Next.js
-interface PageProps {
-  params: Promise<{ slug: string }>;
-}
-
-export default async function LinkPage({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+// Ini yang penting: kita definisikan tipe langsung di parameter fungsi
+export default async function LinkPage({ 
+  params: { slug } 
+}: { 
+  params: { slug: string } 
+}) {
+  if (!slug) return notFound();
 
   try {
     const entries = await contentfulClient.getEntries({
@@ -26,18 +26,11 @@ export default async function LinkPage({ params }: { params: { slug: string } })
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const item = entries.items[0].fields as any;
-    
+
     return (
       <div className="min-h-screen bg-gray-50">
-        {/* Top Ad Space */}
-        <div className="w-full h-24" id="top-ad" />
-
         <div className="container mx-auto px-4 py-8">
           <div className="flex gap-8">
-            {/* Left Ad Space */}
-            <div className="hidden lg:block w-64" id="left-ad" />
-
-            {/* Main Content - Centered */}
             <div className="flex-1 flex items-center justify-center">
               <Link
                 href={item.redirectUrl}
@@ -71,26 +64,29 @@ export default async function LinkPage({ params }: { params: { slug: string } })
                 </div>
               </Link>
             </div>
-
-            {/* Right Ad Space */}
-            <div className="hidden lg:block w-64" id="right-ad" />
           </div>
         </div>
-
-        {/* Bottom Ad Space */}
-        <div className="w-full h-24" id="bottom-ad" />
       </div>
     );
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error fetching link:', error);
     return notFound();
   }
 }
 
-// Generate metadata
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const { slug } = params;
-  
+// Metadata juga pakai tipe inline
+export async function generateMetadata({ 
+  params: { slug } 
+}: { 
+  params: { slug: string } 
+}): Promise<Metadata> {
+  if (!slug) {
+    return {
+      title: 'Not Found',
+      description: 'Page not found',
+    };
+  }
+
   try {
     const entries = await contentfulClient.getEntries({
       content_type: 'link',
@@ -100,7 +96,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     if (!entries.items.length) {
       return {
         title: 'Not Found',
-        description: 'The page youre looking for does not exist.',
+        description: 'The page you are looking for does not exist.',
       };
     }
 
@@ -112,7 +108,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       description: item.description,
     };
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error generating metadata:', error);
     return {
       title: 'Error',
       description: 'An error occurred',
