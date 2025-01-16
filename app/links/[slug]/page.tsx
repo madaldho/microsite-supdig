@@ -1,3 +1,4 @@
+// app/links/[slug]/page.tsx
 import { contentfulClient } from '@/lib/contentful';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
@@ -5,15 +6,12 @@ import Link from 'next/link';
 import { ExternalLink } from 'lucide-react';
 import { Metadata } from 'next';
 
-type PageProps = {
-  params: {
-    slug: string;
-  };
-  searchParams: { [key: string]: string | string[] | undefined };
+// Definisi tipe yang sederhana
+type Props = {
+  params: { slug: string };
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default async function LinkPage({ params }: PageProps) {
+export default async function LinkPage({ params }: Props) {
   const { slug } = params;
 
   const entries = await contentfulClient.getEntries({
@@ -25,8 +23,15 @@ export default async function LinkPage({ params }: PageProps) {
     return notFound();
   }
 
+  // Mengikuti pola yang sama seperti di halaman list
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const item = entries.items[0].fields as any;
+  const link = {
+    title: item.title,
+    description: item.description,
+    imageUrl: `https:${item.image.fields.file.url}`,
+    redirectUrl: item.redirectUrl,
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -41,7 +46,7 @@ export default async function LinkPage({ params }: PageProps) {
           {/* Main Content - Centered */}
           <div className="flex-1 flex items-center justify-center">
             <Link
-              href={item.redirectUrl}
+              href={link.redirectUrl}
               className="block group bg-white rounded-xl p-6 hover:bg-gray-50 transition-all duration-300 shadow-md hover:shadow-lg max-w-xl w-full"
               target="_blank"
               rel="noopener noreferrer"
@@ -49,8 +54,8 @@ export default async function LinkPage({ params }: PageProps) {
               <div className="flex items-center gap-6">
                 <div className="flex-shrink-0 w-20 h-20 relative">
                   <Image
-                    src={`https:${item.image.fields.file.url}`}
-                    alt={item.title}
+                    src={link.imageUrl}
+                    alt={link.title}
                     layout="fill"
                     objectFit="cover"
                     className="rounded-lg"
@@ -60,10 +65,10 @@ export default async function LinkPage({ params }: PageProps) {
                   <div className="flex items-center justify-between">
                     <div>
                       <h2 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                        {item.title}
+                        {link.title}
                       </h2>
                       <p className="text-gray-600 line-clamp-2">
-                        {item.description}
+                        {link.description}
                       </p>
                     </div>
                     <ExternalLink className="w-6 h-6 text-gray-400 group-hover:text-blue-600 transition-colors transform group-hover:translate-x-1 duration-300" />
@@ -84,8 +89,8 @@ export default async function LinkPage({ params }: PageProps) {
   );
 }
 
-// Optional: Generate metadata
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+// Generate metadata dengan tipe yang sederhana
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = params;
   
   const entries = await contentfulClient.getEntries({
