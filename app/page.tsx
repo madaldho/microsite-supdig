@@ -21,7 +21,7 @@ const links = [
     title: "Super Digital",
     subtitle: "Abangnya Produk Produkan",
     imageUrl: "/favicon.png",
-    redirectUrl: "https://themeforest.net/"
+    redirectUrl: "#"
   }
 ]
 
