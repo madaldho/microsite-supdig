@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://ini.kacamatacuan.web.id
+
+# Sitemaps
+Sitemap: https://ini.kacamatacuan.web.id/sitemap.xml
