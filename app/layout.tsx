@@ -1,7 +1,7 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { ReactNode } from "react"; // Import ReactNode untuk tipe children
-import Script from 'next/script';
+import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,9 +12,13 @@ export const metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-       <head>
-      {/* Facebook Pixel Script */}
-      <Script id="facebook-pixel" strategy="afterInteractive">
+      <head>
+        <meta
+          name="google-site-verification"
+          content="Bpbd97x6bEmRhL87NrY9gNq2WsNksvGHyQNJHiQqWPQ"
+        />
+        {/* Facebook Pixel Script */}
+        <Script id="facebook-pixel" strategy="afterInteractive">
           {`
             !function(f,b,e,v,n,t,s)
             {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -32,7 +36,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <img
             height="1"
             width="1"
-            style={{ display: 'none' }}
+            style={{ display: "none" }}
             src="https://www.facebook.com/tr?id=977374340971729&ev=PageView&noscript=1"
           />
         </noscript>
@@ -42,9 +46,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           crossOrigin="anonymous"
           strategy="afterInteractive" // Strategi loading untuk script
         />
-         <body className={inter.className}>{children}</body>
+        <body className={inter.className}>{children}</body>
       </head>
-     
     </html>
   );
 }
