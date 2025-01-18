@@ -13,6 +13,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <head>
+        {/* adnsene */}
+        <meta name="google-adsense-account" content="ca-pub-8454337513998618" />
+        {/* Google Search Console Verification */}
         <meta
           name="google-site-verification"
           content="Bpbd97x6bEmRhL87NrY9gNq2WsNksvGHyQNJHiQqWPQ"
@@ -30,6 +33,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             'https://connect.facebook.net/en_US/fbevents.js');
             fbq('init', '977374340971729');
             fbq('track', 'PageView');
+            fbq('track', 'ViewContent');
           `}
         </Script>
         <noscript>
