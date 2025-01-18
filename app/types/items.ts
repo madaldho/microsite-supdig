@@ -28,6 +28,7 @@ export const items: Item[] = [
     description: "Sertifikat SSL untuk keamanan website Anda",
     imageUrl:
       "https://images.pexels.com/photos/1181244/pexels-photo-1181244.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=200&w=300",
+    redictUrl: "https://www.google.com",
   },
   {
     id: 4,

@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://ini.kacamatacuan.web.id
+Host: https://kacamatacuan.web.id
 
 # Sitemaps
-Sitemap: https://ini.kacamatacuan.web.id/sitemap.xml
+Sitemap: https://kacamatacuan.web.id/sitemap.xml
